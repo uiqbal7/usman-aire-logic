@@ -1,0 +1,57 @@
+Happy path tests
+
+
+// homepage
+
+GIVEN I am a customer
+WHEN I enter "Usman Iqbal" into the 'Your Name:' text box and click 'Start!'
+THEN I will be taken to the "Cookie Clicker!" page
+
+Given I want to select my game
+When I click my name in the high scores
+Then it will take me to the "Cookie Clicker!" page should with my settings
+
+
+// Second page
+
+Given I want to purchase a cookie
+When I click "Click Cookie!"
+Then the cookies counter will go up by 1
+
+
+--- Sell cookies
+
+// Defect - You can never sell just the 1 cookie and return to 0. 
+Given I want to sell a cookie
+When I have 1 cookie and enter the value 1 into the text box next to 'Sell Cookies!'
+Then the cookies counter will go down by 1
+And I will receive a sale of $0.25
+
+Given I want to sell a cookie
+When I have 2 or more cookies
+AND I sell 1 cookie by entering 1 into the text box next to 'Sell Cookies!'
+Then the cookies counter will go down by 1
+And I will receive a sale of $0.25
+
+Given I want to sell cookies
+When I try to sell 3 cookies
+And I only have 2
+Then I should get a message saying "I dont have enough"
+
+
+-- Buy Factories
+
+Given I am a player
+When I want to buy a factory without any money
+Then I should not be able to buy a factory
+
+//
+You can buy a factory without any money and go in to to negative arrears. There should be some validation to say you need "x" amount to buy a single factory. This also means you can buy a load of factories and get ahead very quickly
+//
+
+
+Given I am a player
+When I want to buy a factory 
+AND I have $3 dollars or more
+Then I should be able to purchase a factory
+AND my "Cookies:" total will increase automatically (every time I refresh the page)

@@ -1,0 +1,29 @@
+Postman Tests
+
+I created a few API tests from what I could find and investigate on the game. Please import the collection and environment config. You can then use the postman runner to run the automated test.
+
+Below is my approach along with what I found and saw from testing.
+
+I decided to create a sanity folder where I could just do simple tests to get back a HTTP response. This is sometimes referred to as smoke tests. The idea behind this is so that you know the service is up and running
+
+Sanity Test
+ - createNewGame-200
+ - createNewGame-400
+ - getGameCreated-200
+ - getGameCreated-not found (When running a GET for a game that never existed. I was expecting the API to return a response of not found. Instead, it creates a game.)
+
+
+ Test Scenarios
+ - [Test Case 1] - Add a single cookie
+ - [Test Case 2] - SETUP - Sell a single cookie
+ - [Test Case 2] - Sell a single cookie
+ - [Test Case 3] - Sell more cookies than you have
+ - [Test Case 4] - Buy a factory
+ - [Test Case 5] Check overall status
+
+ Comments
+ - [Test Case 2] - Sell a single cookie] 
+ 	- When you sell a cookie the response returns "result: null". The result should show the remaining amount the player has, unless this is by design.
+
+ - [Test Case 4] - Buy a factory
+ 	- When you purchase a factory, the response doesn't return a integer value for result rather than null. This should be changed to reflect like when adding a cookie.

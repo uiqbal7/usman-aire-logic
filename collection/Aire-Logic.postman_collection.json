@@ -1,0 +1,521 @@
+{
+	"info": {
+		"_postman_id": "a3bba080-af4f-4dc4-97e3-32aae4882083",
+		"name": "Aire-Logic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8242082"
+	},
+	"item": [
+		{
+			"name": "Happy Path Sanity Test",
+			"item": [
+				{
+					"name": "createNewGame-200",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uuid = require('uuid');",
+									"var myUUID = uuid.v4();",
+									"",
+									"pm.environment.set(\"myGUID\", myUUID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "usman-test-game-{{myGUID}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/new_game",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"new_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createNewGame-400",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[Test Case - HTTP Status Code 400]\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "NAME",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/new_game",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"new_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getGameCreated-200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/game/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"game",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getGameCreated-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// When running a GET for a game that never existed. I was expecting the API to return a response of not found. Instead it creates a game."
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/game/usman-test-game-adasd",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"game",
+								"usman-test-game-adasd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Scenarios",
+			"item": [
+				{
+					"name": "[Test Case 1] - Add a single cookie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Check that cookie has been added",
+									"pm.test(\"[Assertion]- A single cookie has been added\", function () {;",
+									"    pm.expect(jsonData.result).to.eql(1);",
+									"});",
+									"",
+									"// Check that no error returned",
+									"pm.test(\"[Assertion]- No error has returned adding a cookie\", function () {;",
+									"    pm.expect(jsonData.error).to.eql(null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"click\",\n    \"params\": [],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 848832.9944665956\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 2] - SETUP - Sell a single cookie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Check that cookie has been added",
+									"pm.test(\"[Assertion]- A single cookie has been added\", function () {;",
+									"    pm.expect(jsonData.result).to.eql(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"click\",\n    \"params\": [],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 848832.9944665956\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 2] - Sell a single cookie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Check that cookie has been removed",
+									"pm.test(\"[Assertion]- A single cookie has been Removed\", function () {;",
+									"    pm.expect(jsonData.result).to.eql(null);",
+									"});",
+									"",
+									"// When you sell a cookie the response returns \"result: null\". The result should show the remaining amount the player has, unless this is by design.",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"sell_cookies\",\n    \"params\": [\n        1\n    ],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 631328.5882497728\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 3] - Sell more cookies than you have",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Check that cookie has been removed",
+									"pm.test(\"[Assertion] - Error message produced 'Not enough cookies to sell'\", function () {;",
+									"    pm.expect(jsonData.error).to.eql(\"Not enough cookies to sell\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"sell_cookies\",\n    \"params\": [\n        3\n    ],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 631328.5882497728\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 4] - Buy a factory",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Check that factory purchased",
+									"pm.test(\"[Assertion]- Check that factory is purchased'\", function () {;",
+									"    pm.expect(jsonData.result).to.eql(null);",
+									"});",
+									"",
+									"// The response should return a value number to confirm the purchase rather than null."
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"buy_factories\",\n    \"params\": [\n        1\n    ],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 214365.75801815526\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 5] Check overall status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"//Check that the number of cookies is >1",
+									"pm.test(\"[Test Case]- Check that the number of cookies is >1\", function () {;",
+									"    pm.expect(jsonData.result.cookies).to.be.above(1)",
+									"});",
+									"",
+									"// Check the number of factories purchase",
+									"pm.test(\"[Test Case]- Check that factory is purchased\", function () {;",
+									"    pm.expect(jsonData.result.factories).to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, [5000]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"status\",\n    \"params\": [],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 950888.1316359165\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
