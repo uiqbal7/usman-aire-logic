@@ -30,7 +30,10 @@
 								"exec": [
 									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
 									"    pm.response.to.have.status(200);",
-									"});"
+									"});",
+									"",
+									"//save the request to use later",
+									"pm.environment.set(\"req\", pm.request)"
 								],
 								"type": "text/javascript"
 							}
@@ -382,7 +385,70 @@
 					"response": []
 				},
 				{
-					"name": "[Test Case 4] - Buy a factory",
+					"name": "[Test Case 4] - Check money recieved of sale",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check Status Code",
+									"pm.test(\"[Test Case - HTTP Status Code 200]\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Store response as variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"//Check that the number of cookies is 1",
+									"pm.test(\"[Assertion]- We have only 1 cookie\", function () {;",
+									"    pm.expect(jsonData.result.cookies).to.eql(1);",
+									"});",
+									"",
+									"// Check we have recieved money for sale of cookie",
+									"pm.test(\"[Assertion]- Check we have recieved money for sale of cookie\", function () {;",
+									"    pm.expect(jsonData.result.money).to.eql(0.25);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"status\",\n    \"params\": [],\n    \"jsonrpc\": \"2.0\",\n    \"id\": 950888.1316359165\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rpc/usman-test-game-{{myGUID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rpc",
+								"usman-test-game-{{myGUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Test Case 5] - Buy a factory",
 					"event": [
 						{
 							"listen": "test",
@@ -402,6 +468,15 @@
 									"});",
 									"",
 									"// The response should return a value number to confirm the purchase rather than null."
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -433,7 +508,7 @@
 					"response": []
 				},
 				{
-					"name": "[Test Case 5] Check overall status",
+					"name": "[Test Case 6] Check overall status",
 					"event": [
 						{
 							"listen": "test",
@@ -448,14 +523,20 @@
 									"var jsonData = pm.response.json();",
 									"",
 									"//Check that the number of cookies is >1",
-									"pm.test(\"[Test Case]- Check that the number of cookies is >1\", function () {;",
+									"pm.test(\"[Assertion]- Check that the number of cookies is >1\", function () {;",
 									"    pm.expect(jsonData.result.cookies).to.be.above(1)",
 									"});",
 									"",
 									"// Check the number of factories purchase",
-									"pm.test(\"[Test Case]- Check that factory is purchased\", function () {;",
+									"pm.test(\"[Assertion]- Check that factory is purchased\", function () {;",
 									"    pm.expect(jsonData.result.factories).to.eql(1);",
-									"});"
+									"});",
+									"",
+									"// Check the number of factories purchase",
+									"pm.test(\"[Assertion]- Negative Arrears\", function () {;",
+									"    pm.expect(jsonData.result.money).to.eql(-2.75);",
+									"});",
+									""
 								],
 								"type": "text/javascript"
 							}
