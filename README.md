@@ -1,2 +1,2 @@
 # usman-aire-logic
-This is my findings from the tech test
+Please see the folders and files attached for the tech test.

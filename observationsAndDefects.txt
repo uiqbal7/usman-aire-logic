@@ -1,0 +1,41 @@
+NONE HAPPY PATH TESTS
+
+// Homepage
+
+Given I am a user and want to start a new game
+When I don’t enter any text into the "Your Name:" text box and click "Start!"
+Then I should receive a message to say "enter a name"
+
+This results in a game being made without any name and will appear in the high scores. There should be some validation in place to stop this from happening.
+
+
+// Defect
+
+There is no validation on name of games. For eg I can have multiple games with different permutations of Usman Iqbal
+
+- USman Iqbal
+- U$man iqbal
+- Usm@n 1qb@l
+- [space] Usman Iqbal
+
+
+// Defect
+
+Given I make any changes on the cookie clicker page 
+When I click the back button on the browser
+Then I should not lose any of my data
+
+If you are playing the game and you click the back button you will lose all your data. There is no save button on the second page, you must click the hyperlinked "Cookie Clicker!" at the top of the page. This is not always obvious
+
+// Defect
+
+If I have 0 cookies and I enter "-1" into the sell cookies field. It populates my number of cookies to 1 and a minus value of "$-0.25". This shows as if  I have bought cookies rather than sold. There should be validation on the field that you can only sell cookies and not buy back from that same button.
+
+// Observation
+
+- Based upon the game for the link that you provided. There doesn’t seem to be any option to sell a factory?
+
+
+ - If I want to buy 10k worth of factories for example. There’s no validation to say I can’t afford it if I don’t have the money. 
+ - Along with this if I add a "," it only picks up the values prior to the comma. 
+ 		For e.g. 10,000 this will only add 10 factories and not 10000 factories
